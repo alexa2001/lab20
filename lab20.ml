@@ -5,9 +5,16 @@ open Graphics ;;
   
 (* threshold thershold image -- image where pixels above the threshold
 value are black *)
+
+let iterate funct img =
+  List.map  (fun row -> List.map (funct)
+                                 row) img ;;  
+
+
 let threshold img threshold =
-  List.map  (fun row -> List.map (fun v -> if v <= threshold then 0. else 1.)
-                                 row) img
+  iterate (fun v -> if v <= threshold then 0. else 1.) img ;;
+(*   List.map  (fun row -> List.map (fun v -> if v <= threshold then 0. else 1.)
+                                 row) img *)
        
 (* show the image *)
 let depict img =
@@ -20,21 +27,15 @@ let depict img =
 
 (* dither max image -- dithered image *)
 let dither img =
-  List.map
-    (fun row ->
-     List.map
-       (fun v -> if v > Random.float 1.
-                 then 1.
-                 else 0.) row)
-    img
+  iterate (fun v -> if v > Random.float 1. then 1. else 0.) img ;;
+(*   List.map(fun row ->
+     List.map (fun v -> if v > Random.float 1. then 1. else 0.) row) img *)
     
-let mona = Monalisa.image ;;
-  
+let mona = Monalisa.image ;; 
   depict mona ;;
     
-  let mona_threshold = threshold mona 0.75 ;;
-    depict mona_threshold ;;
+let mona_threshold = threshold mona 0.75 ;;
+  depict mona_threshold ;;
       
-    let mona_dither = dither mona ;;
-      depict mona_dither ;;
-           
+  let mona_dither = dither mona ;;
+    depict mona_dither ;;
